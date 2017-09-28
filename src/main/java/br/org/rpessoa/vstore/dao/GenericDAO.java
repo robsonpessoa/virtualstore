@@ -1,9 +1,8 @@
 package br.org.rpessoa.vstore.dao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnitUtil;
+import br.org.rpessoa.vstore.exception.DatabaseException;
+
+import javax.persistence.*;
 
 public class GenericDAO<T> {
     @PersistenceContext
@@ -14,7 +13,7 @@ public class GenericDAO<T> {
         entityManager.refresh(object);
     }
 
-    public void saveOrUpdate(T obj) {
+    public void saveOrUpdate(T obj) throws DatabaseException {
         EntityTransaction transaction = entityManager.getTransaction();
         try {
             transaction.begin();
@@ -25,27 +24,32 @@ public class GenericDAO<T> {
             transaction.commit();
         } catch (Exception e) {
             transaction.rollback();
-            throw new RuntimeException("Not saved.", e);
+            throw new DatabaseException(e);
         }
     }
 
     public T findById(Class<T> clazz, Object id) {
-        return entityManager.find(clazz, id);
+        T result = entityManager.find(clazz, id);
+
+        if (result == null)
+            throw new NoResultException();
+
+        return result;
     }
 
-    public void remove(Class<T> clazz, Object id) {
+    public void remove(Class<T> clazz, Object id) throws DatabaseException {
         T t = findById(clazz, id);
         remove(t);
     }
 
-    public void remove(T object) {
+    public void remove(T object) throws DatabaseException {
         try {
             entityManager.getTransaction().begin();
             entityManager.remove(object);
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
-            throw new RuntimeException("not removed.", e);
+            throw new DatabaseException(e);
         }
     }
 }
