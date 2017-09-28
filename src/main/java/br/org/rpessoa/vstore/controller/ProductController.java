@@ -2,6 +2,7 @@ package br.org.rpessoa.vstore.controller;
 
 import br.org.rpessoa.vstore.dao.GenericDAO;
 import br.org.rpessoa.vstore.dao.ProductDAO;
+import br.org.rpessoa.vstore.exception.DatabaseException;
 import br.org.rpessoa.vstore.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProductController {
 
     @PostMapping
-    public ResponseEntity<?> add(@RequestBody Product product) {
+    public ResponseEntity<?> add(@RequestBody Product product) throws DatabaseException {
         GenericDAO<Product> productGenericDAO = new GenericDAO<>();
         productGenericDAO.saveOrUpdate(product);
 
@@ -43,7 +44,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Integer id,
-                                          @RequestBody Product product) {
+                                          @RequestBody Product product) throws DatabaseException {
         ProductDAO productDAO = new ProductDAO();
         product.setId(id);
         productDAO.saveOrUpdate(product);
@@ -51,7 +52,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) throws DatabaseException {
         ProductDAO productDAO = new ProductDAO();
         productDAO.remove(Product.class, id);
         return ResponseEntity.noContent().build();
