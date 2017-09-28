@@ -33,4 +33,26 @@ public class ProductController {
         ProductDAO productDAO = new ProductDAO();
         return ResponseEntity.ok(productDAO.listAll());
     }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> get(@PathVariable(value = "id") Integer id) {
+        ProductDAO productDAO = new ProductDAO();
+        return ResponseEntity.ok(productDAO.findById(Product.class, id));
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Integer id,
+                                          @RequestBody Product product) {
+        ProductDAO productDAO = new ProductDAO();
+        product.setId(id);
+        productDAO.saveOrUpdate(product);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<?> update(@PathVariable(value = "id") Integer id) {
+        ProductDAO productDAO = new ProductDAO();
+        productDAO.remove(Product.class, id);
+        return ResponseEntity.noContent().build();
+    }
 }

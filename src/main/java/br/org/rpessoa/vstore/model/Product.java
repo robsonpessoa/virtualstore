@@ -1,6 +1,7 @@
 package br.org.rpessoa.vstore.model;
 
 import javax.persistence.*;
+import java.net.URI;
 import java.util.Collection;
 
 @Entity
@@ -11,6 +12,7 @@ public class Product {
     private String name;
     private String description;
     private Collection<ProductValue> ProductValuesById;
+    private URI picture;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -51,6 +53,16 @@ public class Product {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Basic
+    @Column(name = "image_url", nullable = true, length = -1)
+    public URI getPicture() {
+        return picture;
+    }
+
+    public void setPicture(URI picture) {
+        this.picture = picture;
     }
 
     @Override
