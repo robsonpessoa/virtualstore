@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
-    @PostMapping("/products")
+    @PostMapping
     public ResponseEntity<?> add(@RequestBody Product product) {
         GenericDAO<Product> productGenericDAO = new GenericDAO<>();
         productGenericDAO.saveOrUpdate(product);
@@ -28,19 +29,19 @@ public class ProductController {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/products")
+    @GetMapping
     public ResponseEntity<Collection<Product>> list() {
         ProductDAO productDAO = new ProductDAO();
         return ResponseEntity.ok(productDAO.listAll());
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> get(@PathVariable(value = "id") Integer id) {
         ProductDAO productDAO = new ProductDAO();
         return ResponseEntity.ok(productDAO.findById(Product.class, id));
     }
 
-    @PutMapping("/products/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable(value = "id") Integer id,
                                           @RequestBody Product product) {
         ProductDAO productDAO = new ProductDAO();
@@ -49,8 +50,8 @@ public class ProductController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/products/{id}")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Integer id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) {
         ProductDAO productDAO = new ProductDAO();
         productDAO.remove(Product.class, id);
         return ResponseEntity.noContent().build();
