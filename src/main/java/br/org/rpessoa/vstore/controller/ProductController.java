@@ -6,6 +6,7 @@ import br.org.rpessoa.vstore.exception.DatabaseException;
 import br.org.rpessoa.vstore.model.Product;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,6 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ProductController {
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> add(@RequestBody Product product) throws DatabaseException {
         GenericDAO<Product> productGenericDAO = new GenericDAO<>();
         productGenericDAO.saveOrUpdate(product);
@@ -31,18 +33,21 @@ public class ProductController {
     }
 
     @GetMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Collection<Product>> list() {
         ProductDAO productDAO = new ProductDAO();
         return ResponseEntity.ok(productDAO.listAll());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<Product> get(@PathVariable(value = "id") Integer id) {
         ProductDAO productDAO = new ProductDAO();
         return ResponseEntity.ok(productDAO.findById(Product.class, id));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Integer id,
                                           @RequestBody Product product) throws DatabaseException {
         ProductDAO productDAO = new ProductDAO();
@@ -52,6 +57,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) throws DatabaseException {
         ProductDAO productDAO = new ProductDAO();
         productDAO.remove(Product.class, id);
