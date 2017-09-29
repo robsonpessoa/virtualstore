@@ -1,5 +1,7 @@
 package br.org.rpessoa.vstore.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -11,13 +13,6 @@ public class UserAccount {
     private int role;
 
     private User user;
-
-    public UserAccount() {}
-
-    public UserAccount(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     @Id
     @Column(name = "username", nullable = false)

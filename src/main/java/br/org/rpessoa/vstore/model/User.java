@@ -1,6 +1,7 @@
 package br.org.rpessoa.vstore.model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "vs_user", schema = "vstore", catalog = "vstore_db")
-public class User implements UserDetails {
+public class User  {
     private int id;
     private String name;
     private String surname;
@@ -98,50 +99,10 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    @Override
-    @Transient
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        if (this.role == 0)
-            authorities.add(new SimpleGrantedAuthority("USER"));
-        else authorities.add(new SimpleGrantedAuthority("ADMIN"));
-        return authorities;
-    }
-
-    @Override
-    @Transient
-    public String getPassword() {
-        return getAccount().getPassword();
-    }
-
     @Basic
     @Column(name = "username", nullable = false, length = 150)
     public String getUsername() {
         return username;
-    }
-
-    @Override
-    @Transient
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    @Transient
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    @Transient
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    @Transient
-    public boolean isEnabled() {
-        return true;
     }
 
     public void setUsername(String username) {

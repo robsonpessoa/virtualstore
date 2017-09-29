@@ -45,14 +45,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<User> get(@PathVariable(value = "id") Integer id) {
         GenericDAO<User> userDAO = new GenericDAO<>();
         return ResponseEntity.ok(userDAO.findById(User.class, id));
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Integer id,
                                     @RequestBody User product) throws DatabaseException {
         GenericDAO<User> userDAO = new GenericDAO<>();
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Integer id) throws DatabaseException {
         GenericDAO<User> userDAO = new GenericDAO<>();
         userDAO.remove(User.class, id);
@@ -72,7 +72,7 @@ public class UserController {
     // CRUD related to Credit Cards
 
     @PostMapping("/{id}/cards")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> addCard(@PathVariable(value = "id") Integer id,
                                      @RequestBody UserCard userCard) throws DatabaseException {
         GenericDAO<UserCard> userCardDAO = new GenericDAO<>();
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/cards/")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> listCards(@PathVariable(value = "id") Integer id) {
         UserDAO userDAO = new UserDAO();
         User user = userDAO.findById(User.class, id);
@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/cards/{cardId}")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> getCard(@PathVariable(value = "id") Integer id,
                                         @PathVariable(value = "cardId") Integer cardId) {
         GenericDAO<UserCard> userCardDAO = new GenericDAO<>();
@@ -107,7 +107,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/cards/{cardId}")
-    @PreAuthorize("id == authentication.principal.id || hasRole('ADMIN')")
+    @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> deleteCard(@PathVariable(value = "id") Integer id,
                                         @PathVariable(value = "cardId") Integer cardId) throws DatabaseException {
         GenericDAO<UserCard> userCardDAO = new GenericDAO<>();
