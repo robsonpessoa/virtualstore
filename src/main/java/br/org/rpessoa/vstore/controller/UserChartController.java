@@ -33,14 +33,15 @@ public class UserChartController {
         ProductDAO productDAO = new ProductDAO();
         Product product = productDAO.findById(Product.class, productId);
 
+        GenericDAO<UserCartProduct> userCartProductDAO = new GenericDAO<>();
+
         UserCartProduct productCart = new UserCartProduct();
+
         productCart.setItems(items);
         productCart.setProduct(product);
         productCart.setProductId(productId);
         productCart.setUserCart(userCart);
         productCart.setUserId(userId);
-
-        GenericDAO<UserCartProduct> userCartProductDAO = new GenericDAO<>();
         userCartProductDAO.saveOrUpdate(productCart);
 
         return ResponseEntity.ok().build();
@@ -90,7 +91,7 @@ public class UserChartController {
         userPurchaseDAO.saveOrUpdate(purchase);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("user/{userId}/purchases/{id}")
+                .fromCurrentContextPath().path("users/{userId}/purchases/{id}")
                 .buildAndExpand(user.getId(), purchase.getId()).toUri();
 
         return ResponseEntity.created(location).build();
