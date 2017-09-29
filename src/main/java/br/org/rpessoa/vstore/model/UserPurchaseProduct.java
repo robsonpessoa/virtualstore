@@ -98,6 +98,7 @@ public class UserPurchaseProduct {
     }
 
     public void setUserPurchase(UserPurchase vsUserPurchase) {
+        this.userId = userPurchase.getUserId();
         this.userPurchase = vsUserPurchase;
     }
 
@@ -108,6 +109,7 @@ public class UserPurchaseProduct {
     }
 
     public void setProduct(Product vsProductByProductId) {
+        this.productId = vsProductByProductId.getId();
         this.product = vsProductByProductId;
     }
 
@@ -118,6 +120,7 @@ public class UserPurchaseProduct {
     }
 
     public void setProductValue(ProductValue vsProductValue) {
+        this.productValueId = vsProductValue.getId();
         this.productValue = vsProductValue;
     }
 }

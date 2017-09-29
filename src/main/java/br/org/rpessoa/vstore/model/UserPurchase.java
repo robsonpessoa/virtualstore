@@ -10,9 +10,12 @@ import java.util.Collection;
 public class UserPurchase {
     private int id;
     private int userId;
+    private int status;
     private Timestamp date;
+    private int paymentId;
     private User user;
     private Collection<UserPurchaseProduct> userPurchaseProducts;
+    private UserPayment payment;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -44,6 +47,31 @@ public class UserPurchase {
         this.date = date;
     }
 
+    @Basic
+    @Column(name = "status", nullable = false)
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    @Basic
+    @Column(name = "payment_id", nullable = false)
+    public int getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(int paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public void addProduct(UserPurchaseProduct product) {
+        product.setUserPurchase(this);
+        this.userPurchaseProducts.add(product);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,6 +101,7 @@ public class UserPurchase {
     }
 
     public void setUser(User vsUserByUserId) {
+        this.userId = vsUserByUserId.getId();
         this.user = vsUserByUserId;
     }
 
@@ -83,5 +112,15 @@ public class UserPurchase {
 
     public void setUserPurchaseProducts(Collection<UserPurchaseProduct> vsUserPurchaseProducts) {
         this.userPurchaseProducts = vsUserPurchaseProducts;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "payment_id", referencedColumnName = "id", nullable = true)
+    public UserPayment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(UserPayment payment) {
+        this.payment = payment;
     }
 }

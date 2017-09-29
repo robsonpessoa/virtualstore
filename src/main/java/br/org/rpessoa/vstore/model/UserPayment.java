@@ -8,8 +8,8 @@ public class UserPayment {
     private int id;
     private int type;
     private Integer billNumber;
-    private User vsUserByUserId;
-    private UserCard vsUserCard;
+    private User user;
+    private UserCard userCard;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -65,21 +65,21 @@ public class UserPayment {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    public User getVsUserByUserId() {
-        return vsUserByUserId;
+    public User getUser() {
+        return user;
     }
 
-    public void setVsUserByUserId(User vsUserByUserId) {
-        this.vsUserByUserId = vsUserByUserId;
+    public void setUser(User vsUserByUserId) {
+        this.user = vsUserByUserId;
     }
 
     @ManyToOne
     @JoinColumns({@JoinColumn(name = "card_id", referencedColumnName = "id"), @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
-    public UserCard getVsUserCard() {
-        return vsUserCard;
+    public UserCard getUserCard() {
+        return userCard;
     }
 
-    public void setVsUserCard(UserCard vsUserCard) {
-        this.vsUserCard = vsUserCard;
+    public void setUserCard(UserCard vsUserCard) {
+        this.userCard = vsUserCard;
     }
 }

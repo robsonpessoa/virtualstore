@@ -13,6 +13,7 @@ public class Product {
     private String description;
     private Collection<ProductValue> ProductValuesById;
     private URI picture;
+    private int valueId;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -63,6 +64,16 @@ public class Product {
 
     public void setPicture(URI picture) {
         this.picture = picture;
+    }
+
+    @Basic
+    @Column(name = "value_id", nullable = true, length = -1)
+    public int getValueId() {
+        return valueId;
+    }
+
+    public void setValueId(int valueId) {
+        this.valueId = valueId;
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.Collection;
 public class UserCart {
     private int userId;
     private User user;
-    private Collection<UserCartProduct> vsUserCartProductsById;
+    private Collection<UserCartProduct> products;
 
     @Id
     @Column(name = "user_id", nullable = false)
@@ -48,11 +48,11 @@ public class UserCart {
     }
 
     @OneToMany(mappedBy = "userCart")
-    public Collection<UserCartProduct> getVsUserCartProductsById() {
-        return vsUserCartProductsById;
+    public Collection<UserCartProduct> getProducts() {
+        return products;
     }
 
-    public void setVsUserCartProductsById(Collection<UserCartProduct> vsUserCartProductsById) {
-        this.vsUserCartProductsById = vsUserCartProductsById;
+    public void setProducts(Collection<UserCartProduct> vsUserCartProductsById) {
+        this.products = vsUserCartProductsById;
     }
 }
