@@ -7,6 +7,7 @@ import br.org.rpessoa.vstore.exception.BadRequestException;
 import br.org.rpessoa.vstore.exception.DatabaseException;
 import br.org.rpessoa.vstore.model.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,6 +25,7 @@ public class UserChartController {
     private static final Integer PAYMENT_BY_BILL = 1;
 
     @PutMapping("/products/{productId}")
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> add(@PathVariable(name = "id") Integer userId,
                                  @PathVariable(name = "productId") Integer productId,
                                  @RequestParam(value = "items", defaultValue = "1") Integer items) throws DatabaseException {
@@ -48,6 +50,7 @@ public class UserChartController {
     }
 
     @GetMapping("/products/")
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> list(@PathVariable(name = "id") Integer userId) {
         GenericDAO<UserCart> usarCartDAO = new GenericDAO<>();
         UserCart userCart = usarCartDAO.findById(UserCart.class, userId);
@@ -55,6 +58,7 @@ public class UserChartController {
     }
 
     @DeleteMapping("/products/{productId}")
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Integer userId) throws DatabaseException {
         GenericDAO<UserCart> usarCartDAO = new GenericDAO<>();
         usarCartDAO.remove(UserCart.class, userId);
@@ -62,6 +66,7 @@ public class UserChartController {
     }
 
     @PostMapping("/buy")
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> buy(@PathVariable(value = "id") Integer userId,
                                  @RequestParam(name = "payment_method", defaultValue = "0")
                                          Integer paymentMethod,
