@@ -7,6 +7,7 @@ import br.org.rpessoa.vstore.model.User;
 import br.org.rpessoa.vstore.model.UserPurchase;
 import br.org.rpessoa.vstore.model.UserPurchasePK;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class PurchaseController {
 
     @GetMapping
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> list(@PathVariable(name = "userId") Integer userId) {
         UserDAO userDAO = new UserDAO();
         User user = userDAO.findById(User.class, userId);
@@ -21,6 +23,7 @@ public class PurchaseController {
     }
 
     @GetMapping(path = "/{id}")
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> get(@PathVariable(name = "userId") Integer userId,
                                  @PathVariable(name = "id") Integer id) {
         GenericDAO<UserPurchase> purchaseDAO = new GenericDAO<>();
@@ -32,6 +35,7 @@ public class PurchaseController {
     }
 
     @DeleteMapping(path = "/{id}")
+    @PreAuthorize("userId == authentication.principal.id || hasRole('ADMIN')")
     public ResponseEntity<?> delete(@PathVariable(name = "userId") Integer userId,
                                  @PathVariable(name = "id") Integer id) throws DatabaseException {
         GenericDAO<UserPurchase> purchaseDAO = new GenericDAO<>();
