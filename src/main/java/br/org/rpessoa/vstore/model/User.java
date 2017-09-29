@@ -102,7 +102,9 @@ public class User implements UserDetails {
     @Transient
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+        if (this.role == 0)
+            authorities.add(new SimpleGrantedAuthority("USER"));
+        else authorities.add(new SimpleGrantedAuthority("ADMIN"));
         return authorities;
     }
 
