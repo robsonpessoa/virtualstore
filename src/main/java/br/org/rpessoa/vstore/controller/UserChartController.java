@@ -90,8 +90,8 @@ public class UserChartController {
         userPurchaseDAO.saveOrUpdate(purchase);
 
         URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/purchases/{id}")
-                .buildAndExpand(purchase.getId()).toUri();
+                .fromCurrentContextPath().path("user/{userId}/purchases/{id}")
+                .buildAndExpand(user.getId(), purchase.getId()).toUri();
 
         return ResponseEntity.created(location).build();
     }
