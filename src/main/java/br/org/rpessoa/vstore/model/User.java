@@ -1,36 +1,58 @@
 package br.org.rpessoa.vstore.model;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.eclipse.persistence.annotations.PrivateOwned;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "vs_user", schema = "vstore", catalog = "vstore_db")
-public class User  {
-    private int id;
-    private String name;
-    private String surname;
-    private String cpf;
-    private String cnpj;
-    private int role;
-    private String email;
-    private String username;
-    private Collection<UserAddress> addresses;
-    private Collection<UserCard> cards;
-    private UserCart cart;
-    private Collection<UserPhone> phones;
-    private Collection<UserPurchase> purchases;
-    private UserAccount account;
-
+public class User {
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Basic
+    @Column(name = "name", nullable = false, length = 40)
+    private String name;
+    @Basic
+    @Column(name = "surname", nullable = false, length = 50)
+    private String surname;
+    @Basic
+    @Column(name = "cpf", nullable = true, length = 11)
+    private String cpf;
+    @Basic
+    @Column(name = "cnpj", nullable = true, length = 14)
+    private String cnpj;
+    @Basic
+    @Column(name = "role", nullable = false)
+    private int role;
+    @Basic
+    @Column(name = "email", nullable = false, length = 150)
+    private String email;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @PrivateOwned
+    private Collection<UserAddress> addresses;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @PrivateOwned
+    private Collection<UserCard> cards;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private UserCart cart;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @PrivateOwned
+    private Collection<UserPhone> phones;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @PrivateOwned
+    private Collection<UserPurchase> purchases;
+    @OneToOne
+    @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
+    private UserAccount account;
+
     public int getId() {
         return id;
     }
@@ -39,8 +61,6 @@ public class User  {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "name", nullable = false, length = 40)
     public String getName() {
         return name;
     }
@@ -49,8 +69,6 @@ public class User  {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "surname", nullable = false, length = 50)
     public String getSurname() {
         return surname;
     }
@@ -59,8 +77,6 @@ public class User  {
         this.surname = surname;
     }
 
-    @Basic
-    @Column(name = "cpf", nullable = true, length = 11)
     public String getCpf() {
         return cpf;
     }
@@ -69,8 +85,6 @@ public class User  {
         this.cpf = cpf;
     }
 
-    @Basic
-    @Column(name = "cnpj", nullable = true, length = 14)
     public String getCnpj() {
         return cnpj;
     }
@@ -79,8 +93,6 @@ public class User  {
         this.cnpj = cnpj;
     }
 
-    @Basic
-    @Column(name = "role", nullable = false)
     public int getRole() {
         return role;
     }
@@ -89,24 +101,12 @@ public class User  {
         this.role = role;
     }
 
-    @Basic
-    @Column(name = "email", nullable = false, length = 150)
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    @Basic
-    @Column(name = "username", nullable = false, length = 150)
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     @Override
@@ -139,7 +139,6 @@ public class User  {
         return result;
     }
 
-    @OneToMany(mappedBy = "user")
     public Collection<UserAddress> getAddresses() {
         return addresses;
     }
@@ -148,7 +147,6 @@ public class User  {
         this.addresses = vsUserAddressesById;
     }
 
-    @OneToMany(mappedBy = "user")
     public Collection<UserCard> getCards() {
         return cards;
     }
@@ -157,7 +155,6 @@ public class User  {
         this.cards = vsUserCardsById;
     }
 
-    @OneToOne(mappedBy = "user")
     public UserCart getCart() {
         return cart;
     }
@@ -166,7 +163,6 @@ public class User  {
         this.cart = vsUserCartById;
     }
 
-    @OneToMany(mappedBy = "user")
     public Collection<UserPhone> getPhones() {
         return phones;
     }
@@ -175,7 +171,6 @@ public class User  {
         this.phones = vsUserPhonesById;
     }
 
-    @OneToMany(mappedBy = "user")
     public Collection<UserPurchase> getPurchases() {
         return purchases;
     }
@@ -184,8 +179,6 @@ public class User  {
         this.purchases = vsUserPurchasesById;
     }
 
-    @OneToOne
-    @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
     public UserAccount getAccount() {
         return account;
     }

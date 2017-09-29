@@ -4,36 +4,30 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "vs_user_cart_product", schema = "vstore", catalog = "vstore_db")
-@IdClass(UserCartProductPK.class)
 public class UserCartProduct {
-    private int userId;
-    private int productId;
+    @EmbeddedId
+    private UserCartProductId userId;
+    @Basic
+    @Column(name = "items", nullable = true)
     private Integer items;
+
+    @MapsId("userId")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private UserCart userCart;
+    @MapsId("productId")
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
 
-    @Id
-    @Column(name = "user_id", nullable = false)
-    public int getUserId() {
+    public UserCartProductId getUserCartProductId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserCartProductId(UserCartProductId userId) {
         this.userId = userId;
     }
 
-    @Id
-    @Column(name = "product_id", nullable = false)
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    @Basic
-    @Column(name = "items", nullable = true)
     public Integer getItems() {
         return items;
     }
@@ -49,8 +43,7 @@ public class UserCartProduct {
 
         UserCartProduct that = (UserCartProduct) o;
 
-        if (userId != that.userId) return false;
-        if (productId != that.productId) return false;
+        if (!userId.equals(that.userId)) return false;
         if (items != null ? !items.equals(that.items) : that.items != null) return false;
 
         return true;
@@ -58,14 +51,11 @@ public class UserCartProduct {
 
     @Override
     public int hashCode() {
-        int result = userId;
-        result = 31 * result + productId;
+        int result = userId.hashCode();
         result = 31 * result + (items != null ? items.hashCode() : 0);
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     public UserCart getUserCart() {
         return userCart;
     }
@@ -74,8 +64,6 @@ public class UserCartProduct {
         this.userCart = vsUserByUserId;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     public Product getProduct() {
         return product;
     }

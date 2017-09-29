@@ -1,38 +1,31 @@
 package br.org.rpessoa.vstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "vs_user_phone", schema = "vstore", catalog = "vstore_db")
-@IdClass(UserPhonePK.class)
 public class UserPhone {
-    private int id;
-    private int userId;
+    @EmbeddedId
+    private UserPhoneId id;
+    @Basic
+    @Column(name = "number", nullable = false, length = 20)
     private String number;
+    @MapsId("userId")
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private User user;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
+    public UserPhoneId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UserPhoneId id) {
         this.id = id;
     }
 
-    @Id
-    @Column(name = "user_id", nullable = false)
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    @Basic
-    @Column(name = "number", nullable = false, length = 20)
     public String getNumber() {
         return number;
     }
@@ -48,8 +41,7 @@ public class UserPhone {
 
         UserPhone userPhone = (UserPhone) o;
 
-        if (id != userPhone.id) return false;
-        if (userId != userPhone.userId) return false;
+        if (!id.equals(userPhone.id)) return false;
         if (number != null ? !number.equals(userPhone.number) : userPhone.number != null) return false;
 
         return true;
@@ -57,14 +49,11 @@ public class UserPhone {
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + userId;
+        int result = id.hashCode();
         result = 31 * result + (number != null ? number.hashCode() : 0);
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public User getUser() {
         return user;
     }

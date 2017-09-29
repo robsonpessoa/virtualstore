@@ -1,18 +1,17 @@
 package br.org.rpessoa.vstore.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
-public class UserPurchasePK implements Serializable {
+@Embeddable
+public class UserAddressId implements Serializable {
+    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "user_id", nullable = false)
     private int userId;
 
-    @Column(name = "id", nullable = false)
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public int getId() {
         return id;
     }
@@ -21,8 +20,6 @@ public class UserPurchasePK implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "user_id", nullable = false)
-    @Id
     public int getUserId() {
         return userId;
     }
@@ -36,7 +33,7 @@ public class UserPurchasePK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserPurchasePK that = (UserPurchasePK) o;
+        UserAddressId that = (UserAddressId) o;
 
         if (id != that.id) return false;
         if (userId != that.userId) return false;

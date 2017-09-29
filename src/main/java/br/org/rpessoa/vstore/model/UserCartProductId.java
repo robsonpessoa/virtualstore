@@ -1,29 +1,19 @@
 package br.org.rpessoa.vstore.model;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.io.Serializable;
 
-public class UserPurchaseProductPK implements Serializable {
-    private int purchaseId;
+@Embeddable
+public class UserCartProductId implements Serializable {
+    @Column(name = "user_id", nullable = false)
     private int userId;
+
+    @Column(name = "product_id", nullable = false)
     private int productId;
 
-    @Column(name = "purchase_id", nullable = false)
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getPurchaseId() {
-        return purchaseId;
-    }
-
-    public void setPurchaseId(int purchaseId) {
-        this.purchaseId = purchaseId;
-    }
-
-    @Column(name = "user_id", nullable = false)
-    @Id
     public int getUserId() {
         return userId;
     }
@@ -32,8 +22,6 @@ public class UserPurchaseProductPK implements Serializable {
         this.userId = userId;
     }
 
-    @Column(name = "product_id", nullable = false)
-    @Id
     public int getProductId() {
         return productId;
     }
@@ -47,9 +35,8 @@ public class UserPurchaseProductPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UserPurchaseProductPK that = (UserPurchaseProductPK) o;
+        UserCartProductId that = (UserCartProductId) o;
 
-        if (purchaseId != that.purchaseId) return false;
         if (userId != that.userId) return false;
         if (productId != that.productId) return false;
 
@@ -58,8 +45,7 @@ public class UserPurchaseProductPK implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = purchaseId;
-        result = 31 * result + userId;
+        int result = userId;
         result = 31 * result + productId;
         return result;
     }

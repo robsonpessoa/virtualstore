@@ -13,9 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 
 @RestController
 @RequestMapping("/users/{id}/chart")
@@ -41,9 +39,7 @@ public class UserChartController {
 
         productCart.setItems(items);
         productCart.setProduct(product);
-        productCart.setProductId(productId);
         productCart.setUserCart(userCart);
-        productCart.setUserId(userId);
         userCartProductDAO.saveOrUpdate(productCart);
 
         return ResponseEntity.ok().build();
@@ -116,10 +112,7 @@ public class UserChartController {
             UserPurchaseProduct purchaseProduct = new UserPurchaseProduct();
             purchaseProduct.setItems(cartProduct.getItems());
 
-            Product p = productDAO.findById(Product.class, cartProduct.getProductId());
-            purchaseProduct.setProduct(p);
-
-            ProductValue value = productDAO.getCurrentValue(cartProduct.getProductId());
+            ProductValue value = productDAO.getCurrentValue(cartProduct.getUserCartProductId().getProductId());
             purchaseProduct.setProductValue(value);
 
             purchase.addProduct(purchaseProduct);

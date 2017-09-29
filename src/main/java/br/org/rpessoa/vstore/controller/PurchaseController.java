@@ -5,7 +5,7 @@ import br.org.rpessoa.vstore.dao.UserDAO;
 import br.org.rpessoa.vstore.exception.DatabaseException;
 import br.org.rpessoa.vstore.model.User;
 import br.org.rpessoa.vstore.model.UserPurchase;
-import br.org.rpessoa.vstore.model.UserPurchasePK;
+import br.org.rpessoa.vstore.model.UserPurchaseId;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class PurchaseController {
     public ResponseEntity<?> get(@PathVariable(name = "userId") Integer userId,
                                  @PathVariable(name = "id") Integer id) {
         GenericDAO<UserPurchase> purchaseDAO = new GenericDAO<>();
-        UserPurchasePK purchaseId = new UserPurchasePK();
+        UserPurchaseId purchaseId = new UserPurchaseId();
         purchaseId.setId(id);
         purchaseId.setUserId(userId);
         UserPurchase purchase = purchaseDAO.findById(UserPurchase.class, purchaseId);
@@ -39,7 +39,7 @@ public class PurchaseController {
     public ResponseEntity<?> delete(@PathVariable(name = "userId") Integer userId,
                                  @PathVariable(name = "id") Integer id) throws DatabaseException {
         GenericDAO<UserPurchase> purchaseDAO = new GenericDAO<>();
-        UserPurchasePK purchaseId = new UserPurchasePK();
+        UserPurchaseId purchaseId = new UserPurchaseId();
         purchaseId.setId(id);
         purchaseId.setUserId(userId);
 

@@ -1,21 +1,22 @@
 package br.org.rpessoa.vstore.model;
 
-import org.springframework.security.core.GrantedAuthority;
-
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
 @Table(name = "vs_user_account", schema = "vstore", catalog = "vstore_db")
 public class UserAccount {
-    private String username;
-    private String password;
-    private int role;
-
-    private User user;
-
     @Id
     @Column(name = "username", nullable = false)
+    private String username;
+    @Basic
+    @Column(name = "password", nullable = false)
+    private String password;
+    @Basic
+    @Column(name = "role", nullable = false)
+    private int role;
+    @OneToOne(mappedBy = "account")
+    private User user;
+
     public String getUsername() {
         return username;
     }
@@ -24,8 +25,6 @@ public class UserAccount {
         this.username = username;
     }
 
-    @Basic
-    @Column(name = "password", nullable = false)
     public String getPassword() {
         return password;
     }
@@ -34,8 +33,6 @@ public class UserAccount {
         this.password = password;
     }
 
-    @Basic
-    @Column(name = "role", nullable = false)
     public int getRole() {
         return role;
     }
@@ -64,7 +61,6 @@ public class UserAccount {
         return result;
     }
 
-    @OneToOne(mappedBy = "account")
     public User getUser() {
         return user;
     }

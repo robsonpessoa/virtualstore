@@ -11,4 +11,5 @@ public class UserDAO extends GenericDAO<User> {
         Query query = entityManager.createQuery("SELECT u FROM User u ");
         return query.getResultList();
     }
+
 }

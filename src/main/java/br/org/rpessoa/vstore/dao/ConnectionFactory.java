@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ConnectionFactory {
-    private static final String PERSISTENCE_UNIT = "xamegapp-unit";
+    private static final String PERSISTENCE_UNIT = "VirtualStoreUnit";
 
     private static EntityManagerFactory factory;
 
@@ -25,7 +25,7 @@ public class ConnectionFactory {
                     .append("/")
                     .append(reader.read("database.name")).toString();
 
-            if (Boolean.getBoolean(reader.read("debug")))
+            //if (Boolean.getBoolean(reader.read("debug")))
                 properties.put("eclipselink.logging.level", "fine");
             properties.put("javax.persistence.jdbc.driver", reader.read("database.connection.driver"));
             properties.put("javax.persistence.jdbc.url", uri);

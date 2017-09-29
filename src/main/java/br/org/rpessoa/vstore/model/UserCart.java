@@ -1,17 +1,29 @@
 package br.org.rpessoa.vstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.eclipse.persistence.annotations.PrivateOwned;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "vs_user_cart", schema = "vstore", catalog = "vstore_db")
 public class UserCart {
-    private int userId;
-    private User user;
-    private Collection<UserCartProduct> products;
-
     @Id
     @Column(name = "user_id", nullable = false)
+    private int userId;
+
+    @MapsId("userId")
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
+    private User user;
+
+    @OneToMany(mappedBy = "userCart", cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @PrivateOwned
+    private Collection<UserCartProduct> products;
+
     public int getUserId() {
         return userId;
     }
@@ -37,8 +49,6 @@ public class UserCart {
         return userId;
     }
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public User getUser() {
         return user;
     }
@@ -47,7 +57,6 @@ public class UserCart {
         this.user = vsUserByUserId;
     }
 
-    @OneToMany(mappedBy = "userCart")
     public Collection<UserCartProduct> getProducts() {
         return products;
     }

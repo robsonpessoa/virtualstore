@@ -1,21 +1,16 @@
 package br.org.rpessoa.vstore.controller;
 
 import br.org.rpessoa.vstore.dao.GenericDAO;
-import br.org.rpessoa.vstore.dao.ProductDAO;
 import br.org.rpessoa.vstore.dao.UserDAO;
 import br.org.rpessoa.vstore.exception.DatabaseException;
-import br.org.rpessoa.vstore.model.Product;
 import br.org.rpessoa.vstore.model.User;
 import br.org.rpessoa.vstore.model.UserCard;
-import br.org.rpessoa.vstore.model.UserCardPK;
+import br.org.rpessoa.vstore.model.UserCardId;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.annotation.security.PermitAll;
 import java.net.URI;
 import java.util.Collection;
 
@@ -75,8 +70,10 @@ public class UserController {
     @PreAuthorize("id == authentication.principal.getId() || hasRole('ADMIN')")
     public ResponseEntity<?> addCard(@PathVariable(value = "id") Integer id,
                                      @RequestBody UserCard userCard) throws DatabaseException {
+        GenericDAO<User> userDAO = new GenericDAO<>();
+        User user = userDAO.findById(User.class, id);
         GenericDAO<UserCard> userCardDAO = new GenericDAO<>();
-        userCard.setUserId(id);
+        userCard.setUser(user);
         userCardDAO.saveOrUpdate(userCard);
 
         URI location = ServletUriComponentsBuilder
@@ -99,7 +96,7 @@ public class UserController {
     public ResponseEntity<?> getCard(@PathVariable(value = "id") Integer id,
                                         @PathVariable(value = "cardId") Integer cardId) {
         GenericDAO<UserCard> userCardDAO = new GenericDAO<>();
-        UserCardPK userCardId = new UserCardPK();
+        UserCardId userCardId = new UserCardId();
         userCardId.setUserId(id);
         userCardId.setId(cardId);
         UserCard card = userCardDAO.findById(UserCard.class, userCardId);
@@ -111,7 +108,7 @@ public class UserController {
     public ResponseEntity<?> deleteCard(@PathVariable(value = "id") Integer id,
                                         @PathVariable(value = "cardId") Integer cardId) throws DatabaseException {
         GenericDAO<UserCard> userCardDAO = new GenericDAO<>();
-        UserCardPK userCardId = new UserCardPK();
+        UserCardId userCardId = new UserCardId();
         userCardId.setUserId(id);
         userCardId.setId(cardId);
         userCardDAO.remove(UserCard.class, userCardId);

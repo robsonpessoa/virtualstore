@@ -1,18 +1,17 @@
 package br.org.rpessoa.vstore.model;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
-public class ProductValuePK implements Serializable {
-    private int id;
-    private int productId;
-
+@Embeddable
+public class UserPhoneId implements Serializable {
     @Column(name = "id", nullable = false)
-    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @Column(name = "user_id", nullable = false)
+    private int userId;
+
     public int getId() {
         return id;
     }
@@ -21,14 +20,12 @@ public class ProductValuePK implements Serializable {
         this.id = id;
     }
 
-    @Column(name = "product_id", nullable = false)
-    @Id
-    public int getProductId() {
-        return productId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -36,10 +33,10 @@ public class ProductValuePK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProductValuePK that = (ProductValuePK) o;
+        UserPhoneId that = (UserPhoneId) o;
 
         if (id != that.id) return false;
-        if (productId != that.productId) return false;
+        if (userId != that.userId) return false;
 
         return true;
     }
@@ -47,7 +44,7 @@ public class ProductValuePK implements Serializable {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + productId;
+        result = 31 * result + userId;
         return result;
     }
 }

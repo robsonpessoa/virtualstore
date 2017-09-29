@@ -1,41 +1,38 @@
 package br.org.rpessoa.vstore.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "vs_user_address", schema = "vstore", catalog = "vstore_db")
-@IdClass(UserAddressPK.class)
 public class UserAddress {
-    private int id;
-    private int userId;
+    @EmbeddedId
+    private UserAddressId id;
+    @Basic
+    @Column(name = "name", nullable = true, length = -1)
     private String name;
+    @Basic
+    @Column(name = "neighbourhood", nullable = true, length = 40)
     private String neighbourhood;
+    @Basic
+    @Column(name = "postal_code", nullable = true, length = 8)
     private String postalCode;
 
+    @MapsId("userId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
+    public UserAddressId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UserAddressId id) {
         this.id = id;
     }
 
-    @Id
-    @Column(name = "user_id", nullable = false)
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    @Basic
-    @Column(name = "name", nullable = true, length = -1)
     public String getName() {
         return name;
     }
@@ -44,8 +41,6 @@ public class UserAddress {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "neighbourhood", nullable = true, length = 40)
     public String getNeighbourhood() {
         return neighbourhood;
     }
@@ -54,8 +49,6 @@ public class UserAddress {
         this.neighbourhood = neighbourhood;
     }
 
-    @Basic
-    @Column(name = "postal_code", nullable = true, length = 8)
     public String getPostalCode() {
         return postalCode;
     }
@@ -65,8 +58,6 @@ public class UserAddress {
     }
 
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     public User getUser() {
         return user;
     }
@@ -82,8 +73,7 @@ public class UserAddress {
 
         UserAddress that = (UserAddress) o;
 
-        if (id != that.id) return false;
-        if (userId != that.userId) return false;
+        if (!id.equals(that.id)) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (neighbourhood != null ? !neighbourhood.equals(that.neighbourhood) : that.neighbourhood != null)
             return false;
@@ -94,8 +84,7 @@ public class UserAddress {
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + userId;
+        int result = id.hashCode();
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (neighbourhood != null ? neighbourhood.hashCode() : 0);
         result = 31 * result + (postalCode != null ? postalCode.hashCode() : 0);

@@ -5,14 +5,23 @@ import javax.persistence.*;
 @Entity
 @Table(name = "vs_user_payment", schema = "vstore", catalog = "vstore_db")
 public class UserPayment {
-    private int id;
-    private int type;
-    private Integer billNumber;
-    private User user;
-    private UserCard userCard;
-
     @Id
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+    @Basic
+    @Column(name = "type", nullable = false)
+    private int type;
+    @Basic
+    @Column(name = "bill_number", nullable = true)
+    private Integer billNumber;
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    @ManyToOne
+    @JoinColumns({@JoinColumn(name = "card_id", referencedColumnName = "id"), @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
+    private UserCard userCard;
+
     public int getId() {
         return id;
     }
@@ -21,8 +30,6 @@ public class UserPayment {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "type", nullable = false)
     public int getType() {
         return type;
     }
@@ -31,8 +38,6 @@ public class UserPayment {
         this.type = type;
     }
 
-    @Basic
-    @Column(name = "bill_number", nullable = true)
     public Integer getBillNumber() {
         return billNumber;
     }
@@ -63,8 +68,6 @@ public class UserPayment {
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
     public User getUser() {
         return user;
     }
@@ -73,8 +76,6 @@ public class UserPayment {
         this.user = vsUserByUserId;
     }
 
-    @ManyToOne
-    @JoinColumns({@JoinColumn(name = "card_id", referencedColumnName = "id"), @JoinColumn(name = "user_id", referencedColumnName = "user_id")})
     public UserCard getUserCard() {
         return userCard;
     }

@@ -1,17 +1,26 @@
 package br.org.rpessoa.vstore.model;
 
+import br.org.rpessoa.vstore.dao.PostgresUuidConverter;
+
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.UUID;
 
 @Entity
 @Table(name = "vs_media", schema = "vstore", catalog = "vstore_db")
+@org.eclipse.persistence.annotations.Converter(
+        name = "uuidConverter",
+        converterClass = PostgresUuidConverter.class
+)
 public class Media {
-    private UUID uuid;
-    private byte[] data;
-
     @Id
     @Column(name = "id", nullable = false)
+    @org.eclipse.persistence.annotations.Convert("uuidConverter")
+    private UUID uuid;
+
+    @Column(name = "data", nullable = false)
+    private byte[] data;
+
     public UUID getUuid() {
         return uuid;
     }
@@ -20,8 +29,6 @@ public class Media {
         this.uuid = uuid;
     }
 
-    @Id
-    @Column(name = "data", nullable = false)
     public byte[] getData() {
         return data;
     }

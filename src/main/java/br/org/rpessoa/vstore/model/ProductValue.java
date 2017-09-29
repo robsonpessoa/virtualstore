@@ -2,39 +2,33 @@ package br.org.rpessoa.vstore.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "vs_product_value", schema = "vstore", catalog = "vstore_db")
-@IdClass(ProductValuePK.class)
 public class ProductValue {
-    private int id;
-    private int productId;
+    @EmbeddedId
+    private ProductValueId id;
+    @Basic
+    @Column(name = "value", nullable = false)
     private Double value;
+    @Basic
+    @Column(name = "creation_date", nullable = false)
     private Timestamp creationDate;
+    @MapsId("productId")
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
 
-    @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
+    public ProductValueId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(ProductValueId id) {
         this.id = id;
     }
 
-    @Id
-    @Column(name = "product_id", nullable = false)
-    public int getProductId() {
-        return productId;
-    }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    @Basic
-    @Column(name = "value", nullable = false)
     public Double getValue() {
         return value;
     }
@@ -43,8 +37,6 @@ public class ProductValue {
         this.value = value;
     }
 
-    @Basic
-    @Column(name = "creation_date", nullable = false)
     public Timestamp getCreationDate() {
         return creationDate;
     }
@@ -60,8 +52,7 @@ public class ProductValue {
 
         ProductValue that = (ProductValue) o;
 
-        if (id != that.id) return false;
-        if (productId != that.productId) return false;
+        if (!id.equals(that.id)) return false;
         if (value != null ? !value.equals(that.value) : that.value != null) return false;
         if (creationDate != null ? !creationDate.equals(that.creationDate) : that.creationDate != null) return false;
 
@@ -70,15 +61,12 @@ public class ProductValue {
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + productId;
+        int result = id.hashCode();
         result = 31 * result + (value != null ? value.hashCode() : 0);
         result = 31 * result + (creationDate != null ? creationDate.hashCode() : 0);
         return result;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     public Product getProduct() {
         return product;
     }
