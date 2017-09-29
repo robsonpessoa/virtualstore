@@ -1,11 +1,17 @@
 package br.org.rpessoa.vstore.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "vs_user", schema = "vstore", catalog = "vstore_db")
-public class User {
+public class User implements UserDetails {
     private int id;
     private String name;
     private String surname;
@@ -13,11 +19,13 @@ public class User {
     private String cnpj;
     private int role;
     private String email;
+    private String username;
     private Collection<UserAddress> addresses;
     private Collection<UserCard> cards;
     private UserCart cart;
     private Collection<UserPhone> phones;
     private Collection<UserPurchase> purchases;
+    private UserAccount account;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -88,6 +96,54 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    @Transient
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("USER"));
+        return authorities;
+    }
+
+    @Override
+    @Transient
+    public String getPassword() {
+        return getAccount().getPassword();
+    }
+
+    @Basic
+    @Column(name = "username", nullable = false, length = 150)
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    @Transient
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -163,5 +219,15 @@ public class User {
 
     public void setPurchases(Collection<UserPurchase> vsUserPurchasesById) {
         this.purchases = vsUserPurchasesById;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "username", referencedColumnName = "username", nullable = false)
+    public UserAccount getAccount() {
+        return account;
+    }
+
+    public void setAccount(UserAccount account) {
+        this.account = account;
     }
 }
